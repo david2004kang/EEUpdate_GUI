@@ -1,0 +1,282 @@
+2026-08-19 16:46:36,503 [INFO] Loaded program.dat: next mac address=(empty) auto_inc_mac=False
+2026-08-19 16:46:36,503 [WARNING] Application started without Administrator; EEUPDATE may fail
+2026-08-19 16:46:41,596 [INFO] Button: 讀取MAC address
+2026-08-19 16:46:41,597 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 16:46:41,615 [INFO] EEUPDATE output:
+
+Insufficient privileges. Please run this program from the Administrator account
+2026-08-19 16:46:41,615 [INFO] EEUPDATE exit code: 1
+2026-08-19 16:47:47,585 [INFO] Loaded program.dat: next mac address=(empty) auto_inc_mac=False
+2026-08-19 16:47:47,585 [INFO] Application started (Administrator)
+2026-08-19 16:47:50,341 [INFO] Button: 讀取MAC address
+2026-08-19 16:47:50,342 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 16:47:51,611 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   4  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+ 
+Unable to initialize adapter 1 code c86a2002
+Adapter initialization failed
+2026-08-19 16:47:51,611 [INFO] EEUPDATE exit code: 2
+2026-08-19 16:48:02,559 [INFO] Button: 讀取MAC address
+2026-08-19 16:48:02,559 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 16:48:03,357 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   4  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+1: 
+EtrackID:            800001F8 
+Firmware Version:    REV:1.49 
+MAC Address:         64-4B-F0-80-41-9C 
+NVM Version:         1.73 
+Serial Number:       644bf0ffff80419c
+2026-08-19 16:48:03,357 [INFO] EEUPDATE exit code: 0
+2026-08-19 16:58:47,329 [INFO] Loaded program.dat: next mac address=(empty) auto_inc_mac=False
+2026-08-19 16:58:47,329 [INFO] Application started (Administrator)
+2026-08-19 17:00:32,975 [INFO] Button: 讀取MAC address
+2026-08-19 17:00:32,976 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:00:33,673 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+1: 
+EtrackID:            800001F8 
+Firmware Version:    REV:1.49 
+MAC Address:         00-A0-C9-00-00-00 
+NVM Version:         1.73 
+Serial Number:       00a0c9ffff000000
+2026-08-19 17:00:33,673 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:06:49,237 [INFO] Button: 讀取MAC address
+2026-08-19 17:06:49,238 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:06:50,439 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+ 
+Unable to initialize adapter 1 code c86a2002
+Adapter initialization failed
+2026-08-19 17:06:50,439 [INFO] EEUPDATE exit code: 2
+2026-08-19 17:06:53,939 [INFO] Button: 讀取MAC address
+2026-08-19 17:06:53,940 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:06:54,564 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+1: 
+EtrackID:            800001F8 
+Firmware Version:    REV:1.49 
+MAC Address:         00-A0-C9-00-00-00 
+NVM Version:         1.73 
+Serial Number:       00a0c9ffff000000
+2026-08-19 17:06:54,564 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:06:58,274 [INFO] Button: 寫入MAC address
+2026-08-19 17:06:58,275 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /mac=644BF06F0093
+2026-08-19 17:06:58,924 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+ 1: Updating Mac Address to 644BF06F0093...Done.
+ 1: Updating Checksum and CRCs...Done.
+2026-08-19 17:06:58,925 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:06:58,931 [INFO] Auto-increment MAC address -> 64:4B:F0:6F:00:94
+2026-08-19 17:07:11,122 [INFO] Button: 讀取MAC address
+2026-08-19 17:07:11,123 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:07:11,379 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+ 
+No supported adapters were located
+2026-08-19 17:07:11,379 [INFO] EEUPDATE exit code: 10
+2026-08-19 17:07:13,019 [INFO] Button: 讀取MAC address
+2026-08-19 17:07:13,020 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:07:13,484 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+1: 
+EtrackID:            800001F8 
+Firmware Version:    REV:1.49 
+MAC Address:         64-4B-F0-6F-00-93 
+NVM Version:         1.73 
+Serial Number:       644bf0ffff6f0093
+2026-08-19 17:07:13,490 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:07:53,093 [INFO] Button: 讀取MAC address
+2026-08-19 17:07:53,094 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:07:53,559 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+1: 
+EtrackID:            800001F8 
+Firmware Version:    REV:1.49 
+MAC Address:         00-A0-C9-00-00-00 
+NVM Version:         1.73 
+Serial Number:       00a0c9ffff000000
+2026-08-19 17:07:53,559 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:07:57,720 [INFO] Button: 寫入MAC address
+2026-08-19 17:07:57,721 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /mac=644BF06F0094
+2026-08-19 17:07:57,997 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+ 1: Updating Mac Address to 644BF06F0094...Done.
+ 1: Updating Checksum and CRCs...Done.
+2026-08-19 17:07:57,997 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:07:58,005 [INFO] Auto-increment MAC address -> 64:4B:F0:6F:00:95
+2026-08-19 17:08:07,080 [INFO] Button: 讀取MAC address
+2026-08-19 17:08:07,081 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:08:07,348 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+ 
+No supported adapters were located
+2026-08-19 17:08:07,348 [INFO] EEUPDATE exit code: 10
+2026-08-19 17:08:12,007 [INFO] Button: 讀取MAC address
+2026-08-19 17:08:12,008 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:08:12,740 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+1: 
+EtrackID:            800001F8 
+Firmware Version:    REV:1.49 
+MAC Address:         64-4B-F0-6F-00-94 
+NVM Version:         1.73 
+Serial Number:       644bf0ffff6f0094
+2026-08-19 17:08:12,740 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:08:38,693 [INFO] Button: 讀取MAC address
+2026-08-19 17:08:38,694 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:08:38,908 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+ 
+No supported adapters were located
+2026-08-19 17:08:38,908 [INFO] EEUPDATE exit code: 10
+2026-08-19 17:08:40,395 [INFO] Button: 讀取MAC address
+2026-08-19 17:08:40,396 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /ADAPTERINFO
+2026-08-19 17:08:40,794 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+1: 
+EtrackID:            800001F8 
+Firmware Version:    REV:1.49 
+MAC Address:         00-A0-C9-00-00-00 
+NVM Version:         1.73 
+Serial Number:       00a0c9ffff000000
+2026-08-19 17:08:40,794 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:08:43,755 [INFO] Button: 寫入MAC address
+2026-08-19 17:08:43,756 [INFO] Run: C:\Users\david\_working\EEUpdate_GUI\I226_EEUPDATE\EEUPDATEW64e.exe /nic=1 /mac=644BF06F0095
+2026-08-19 17:08:44,036 [INFO] EEUPDATE output:
+
+Using: Intel (R) PRO Network Connections SDK v2.38.10
+EEUPDATE v5.38.10.00 
+Copyright (C) 1995 - 2022 Intel Corporation
+Intel (R) Confidential and not for general distribution.
+
+
+NIC Bus Dev Fun Vendor-Device  Branding string
+=== === === === ============= =================================================
+  1   8  00  00   8086-5502    Intel(R) Ethernet Controller (3) I225-LMvP
+
+ 1: Updating Mac Address to 644BF06F0095...Done.
+ 1: Updating Checksum and CRCs...Done.
+2026-08-19 17:08:44,036 [INFO] EEUPDATE exit code: 0
+2026-08-19 17:08:44,046 [INFO] Auto-increment MAC address -> 64:4B:F0:6F:00:96
