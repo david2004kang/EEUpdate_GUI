@@ -6,20 +6,34 @@ import ctypes
 import json
 import logging
 import os
+import re
 import subprocess
 import sys
 import threading
 import tkinter as tk
-from tkinter import filedialog, scrolledtext, ttk
+from tkinter import filedialog, messagebox, scrolledtext, ttk
+
+import psycopg
 
 APP_DIR = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
 EEUPDATE_EXE = os.path.join(APP_DIR, "I226_EEUPDATE", "EEUPDATEW64e.exe")
 LOG_FILE = os.path.join(APP_DIR, "dev_log.txt")
 CONFIG_FILE = os.path.join(APP_DIR, "program.dat")
 HEX_CHARS = set("0123456789ABCDEF")
+CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
+DEFAULT_DB = {
+    "username": "",
+    "password": "",
+    "host": "",
+    "port": 25060,
+    "database": "defaultdb",
+    "sslmode": "verify-full",
+    "sslrootcert": "ca-certificate.crt",
+}
 DEFAULT_CONFIG = {
     "next mac address": "",
     "auto_inc_mac": False,
+    "db": dict(DEFAULT_DB),
 }
 
 
@@ -62,30 +76,121 @@ def increment_mac(mac: str) -> str:
     return format_mac(f"{value:012X}")
 
 
-def load_config() -> dict:
+def parse_macs_from_output(text: str) -> list[str]:
+    found: list[str] = []
+    for match in re.findall(r"(?:[0-9A-Fa-f]{2}[:\-]){5}[0-9A-Fa-f]{2}", text):
+        hex_str = mac_to_hex(match)
+        if hex_str not in found:
+            found.append(hex_str)
+    if found:
+        return found
+    for match in re.findall(r"\b[0-9A-Fa-f]{12}\b", text):
+        hex_str = match.upper()
+        if hex_str not in found:
+            found.append(hex_str)
+    return found
+
+
+def _read_config_file() -> dict:
     if not os.path.isfile(CONFIG_FILE):
-        save_config(DEFAULT_CONFIG)
-        return dict(DEFAULT_CONFIG)
+        return {}
     try:
         with open(CONFIG_FILE, encoding="utf-8") as f:
             data = json.load(f)
     except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def load_config() -> dict:
+    existing = _read_config_file()
+    if not existing and not os.path.isfile(CONFIG_FILE):
         save_config(DEFAULT_CONFIG)
-        return dict(DEFAULT_CONFIG)
-    config = dict(DEFAULT_CONFIG)
-    if isinstance(data, dict):
-        config.update(data)
+        return {
+            "next mac address": "",
+            "auto_inc_mac": False,
+            "db": dict(DEFAULT_DB),
+        }
+    config = {
+        "next mac address": existing.get("next mac address", ""),
+        "auto_inc_mac": bool(existing.get("auto_inc_mac", False)),
+        "db": dict(DEFAULT_DB),
+    }
+    if isinstance(existing.get("db"), dict):
+        config["db"].update(existing["db"])
     return config
 
 
-def save_config(config: dict) -> None:
-    payload = {
-        "next mac address": mac_to_hex(str(config.get("next mac address", ""))),
-        "auto_inc_mac": bool(config.get("auto_inc_mac", False)),
+def save_config(updates: dict) -> None:
+    payload: dict = {
+        "next mac address": "",
+        "auto_inc_mac": False,
+        "db": dict(DEFAULT_DB),
     }
+    existing = _read_config_file()
+    if existing:
+        payload["next mac address"] = existing.get("next mac address", "")
+        payload["auto_inc_mac"] = bool(existing.get("auto_inc_mac", False))
+        if isinstance(existing.get("db"), dict):
+            payload["db"].update(existing["db"])
+    if "next mac address" in updates:
+        payload["next mac address"] = mac_to_hex(str(updates.get("next mac address", "")))
+    if "auto_inc_mac" in updates:
+        payload["auto_inc_mac"] = bool(updates.get("auto_inc_mac", False))
+    if isinstance(updates.get("db"), dict):
+        payload["db"].update(updates["db"])
     with open(CONFIG_FILE, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)
         f.write("\n")
+
+
+def lookup_product_unit(mac_hex: str) -> list[tuple[str, str]]:
+    db = load_config()["db"]
+    host = str(db.get("host") or "").strip()
+    if not host:
+        raise RuntimeError("DB host is empty in program.dat")
+    cert = str(db.get("sslrootcert") or "").strip()
+    if cert and not os.path.isabs(cert):
+        cert = os.path.join(APP_DIR, cert)
+    conn_kwargs = {
+        "host": host,
+        "port": int(db.get("port") or 25060),
+        "user": str(db.get("username") or ""),
+        "password": str(db.get("password") or ""),
+        "dbname": str(db.get("database") or "defaultdb"),
+        "connect_timeout": 10,
+    }
+    if cert and os.path.isfile(cert):
+        conn_kwargs["sslmode"] = str(db.get("sslmode") or "verify-full")
+        conn_kwargs["sslrootcert"] = cert
+    else:
+        conn_kwargs["sslmode"] = "require"
+        if not getattr(lookup_product_unit, "_warned_no_ca", False):
+            logging.warning("CA certificate not found; connecting with sslmode=require")
+            lookup_product_unit._warned_no_ca = True
+    with psycopg.connect(**conn_kwargs) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT serial_number, notes
+                FROM product_units
+                WHERE regexp_replace(upper(coalesce(mac_address, '')), '[^0-9A-F]', '', 'g') = %s
+                """,
+                (mac_hex.upper(),),
+            )
+            rows = cur.fetchall()
+    return [(str(row[0] or ""), str(row[1] or "")) for row in rows]
+
+
+def format_unit_message(mac_hex: str, rows: list[tuple[str, str]], prefix: str = "") -> str:
+    parts = [prefix, f"MAC address: {format_mac(mac_hex)}", ""]
+    for index, (serial, notes) in enumerate(rows, 1):
+        if len(rows) > 1:
+            parts.append(f"--- record {index} ---")
+        parts.append(f"serial_number: {serial or '(empty)'}")
+        parts.append(f"notes: {notes or '(empty)'}")
+        parts.append("")
+    return "\n".join(parts).strip()
 
 
 class TextHandler(logging.Handler):
@@ -175,10 +280,13 @@ class App(tk.Tk):
         self.auto_inc_var.set(bool(config.get("auto_inc_mac", False)))
         if created:
             logging.info("Created %s", CONFIG_FILE)
+        db = config.get("db") or {}
         logging.info(
-            "Loaded program.dat: next mac address=%s auto_inc_mac=%s",
+            "Loaded program.dat: next mac address=%s auto_inc_mac=%s db_host=%s db_name=%s",
             mac_to_hex(self.mac_var.get()) or "(empty)",
             self.auto_inc_var.get(),
+            db.get("host") or "(empty)",
+            db.get("database") or "(empty)",
         )
 
     def _save_program_dat(self) -> None:
@@ -251,7 +359,7 @@ class App(tk.Tk):
         if self._busy:
             return
         logging.info("Button: 讀取MAC address")
-        self._run_eeupdate(["/nic=1", "/ADAPTERINFO"])
+        self._run_eeupdate(["/nic=1", "/ADAPTERINFO"], check_db_on_read=True)
 
     def _on_write(self) -> None:
         if self._busy:
@@ -261,25 +369,84 @@ class App(tk.Tk):
         if len(mac_hex) != 12:
             logging.error("Write aborted: MAC address must be 12 hex digits")
             return
-        self._run_eeupdate(["/nic=1", f"/mac={mac_hex}"], increment_after_ok=self.auto_inc_var.get())
+        self._set_busy(True)
+        threading.Thread(target=self._write_worker, args=(mac_hex,), daemon=True).start()
 
-    def _run_eeupdate(self, args: list[str], increment_after_ok: bool = False) -> None:
+    def _write_worker(self, mac_hex: str) -> None:
+        try:
+            logging.info("Checking product_units for MAC %s", format_mac(mac_hex))
+            rows = lookup_product_unit(mac_hex)
+        except Exception:
+            logging.exception("DB lookup failed")
+            self.after(0, self._on_write_db_error)
+            return
+        if rows:
+            logging.warning("MAC %s already exists in DB; write aborted", format_mac(mac_hex))
+            self.after(0, self._on_write_mac_exists, mac_hex, rows)
+            return
+        if not os.path.isfile(EEUPDATE_EXE):
+            logging.error("EEUPDATE executable not found: %s", EEUPDATE_EXE)
+            self.after(0, self._set_busy, False)
+            return
+        logging.info("MAC %s not found in DB; writing to adapter", format_mac(mac_hex))
+        self._run_eeupdate_worker(
+            ["/nic=1", f"/mac={mac_hex}"],
+            increment_after_ok=self.auto_inc_var.get(),
+        )
+
+    def _on_write_db_error(self) -> None:
+        self._set_busy(False)
+        messagebox.showerror(
+            "資料庫連線失敗",
+            "寫入前無法查詢 product_units，已中止燒錄。\n請檢查 program.dat 的 DB 設定與網路連線。",
+        )
+
+    def _on_write_mac_exists(self, mac_hex: str, rows: list[tuple[str, str]]) -> None:
+        self._set_busy(False)
+        messagebox.showwarning(
+            "無法寫入 MAC address",
+            format_unit_message(mac_hex, rows, prefix="此 MAC address 已存在於資料庫，不能燒錄。\n\n"),
+        )
+
+    def _on_read_mac_found(self, mac_hex: str, rows: list[tuple[str, str]]) -> None:
+        messagebox.showinfo(
+            "資料庫記錄",
+            format_unit_message(mac_hex, rows, prefix="此 MAC address 在資料庫中已有記錄。\n\n"),
+        )
+
+    def _run_eeupdate(self, args: list[str], increment_after_ok: bool = False, check_db_on_read: bool = False) -> None:
         if not os.path.isfile(EEUPDATE_EXE):
             logging.error("EEUPDATE executable not found: %s", EEUPDATE_EXE)
             return
         self._set_busy(True)
-        threading.Thread(target=self._run_eeupdate_worker, args=(args, increment_after_ok), daemon=True).start()
+        threading.Thread(
+            target=self._run_eeupdate_worker,
+            args=(args, increment_after_ok, check_db_on_read),
+            daemon=True,
+        ).start()
 
-    def _run_eeupdate_worker(self, args: list[str], increment_after_ok: bool) -> None:
+    def _run_eeupdate_worker(
+        self,
+        args: list[str],
+        increment_after_ok: bool = False,
+        check_db_on_read: bool = False,
+    ) -> None:
         cmd = [EEUPDATE_EXE, *args]
         logging.info("Run: %s", " ".join(cmd))
+        run_kwargs: dict = {
+            "cwd": APP_DIR,
+            "capture_output": True,
+            "check": False,
+            "stdin": subprocess.DEVNULL,
+        }
+        if sys.platform == "win32":
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = 0
+            run_kwargs["startupinfo"] = startupinfo
+            run_kwargs["creationflags"] = CREATE_NO_WINDOW
         try:
-            result = subprocess.run(
-                cmd,
-                cwd=APP_DIR,
-                capture_output=True,
-                check=False,
-            )
+            result = subprocess.run(cmd, **run_kwargs)
         except Exception:
             logging.exception("Failed to run EEUPDATE")
             self.after(0, self._set_busy, False)
@@ -291,12 +458,33 @@ class App(tk.Tk):
             logging.info("EEUPDATE output:\n%s", output)
         logging.info("EEUPDATE exit code: %s", result.returncode)
 
+        if check_db_on_read:
+            self._lookup_read_mac(output)
+
         if increment_after_ok and result.returncode == 0:
             new_mac = increment_mac(self.mac_var.get())
             self.after(0, self.mac_var.set, new_mac)
             logging.info("Auto-increment MAC address -> %s", new_mac)
 
         self.after(0, self._set_busy, False)
+
+    def _lookup_read_mac(self, output: str) -> None:
+        macs = parse_macs_from_output(output)
+        if not macs:
+            logging.warning("Could not parse MAC address from EEUPDATE output")
+            return
+        mac_hex = macs[0]
+        logging.info("Parsed adapter MAC %s; checking product_units", format_mac(mac_hex))
+        try:
+            rows = lookup_product_unit(mac_hex)
+        except Exception:
+            logging.exception("DB lookup after read failed")
+            return
+        if not rows:
+            logging.info("MAC %s not found in DB", format_mac(mac_hex))
+            return
+        logging.info("MAC %s found in DB (%s record(s))", format_mac(mac_hex), len(rows))
+        self.after(0, self._on_read_mac_found, mac_hex, rows)
 
 
 def _decode(data: bytes) -> str:
